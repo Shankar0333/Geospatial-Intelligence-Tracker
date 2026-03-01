@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from app.models.schemas import AirspaceBoundary, CameraFeed, DefenseEvent, Geofence
+from app.models.schemas import AirspaceBoundary, CameraFeed, DefenseEvent, Geofence, LandEvent, SeaVessel
 
 
 class OSINTService:
@@ -26,6 +26,53 @@ class OSINTService:
                 region="California, US",
                 stream_url="https://cwwp2.dot.ca.gov/vm/iframemap.htm",
                 source="Caltrans",
+            ),
+        ]
+
+    def list_sea_vessels(self) -> list[SeaVessel]:
+        return [
+            SeaVessel(
+                id="sea-001",
+                name="PACIFIC TRADER",
+                vessel_type="Cargo",
+                latitude=1.3,
+                longitude=103.7,
+                speed_knots=14.2,
+                heading_deg=78,
+                source="Public AIS Aggregator",
+            ),
+            SeaVessel(
+                id="sea-002",
+                name="ATLANTIC AURORA",
+                vessel_type="Tanker",
+                latitude=25.8,
+                longitude=-80.1,
+                speed_knots=11.6,
+                heading_deg=22,
+                source="Public AIS Aggregator",
+            ),
+        ]
+
+    def list_land_events(self) -> list[LandEvent]:
+        now = datetime.utcnow()
+        return [
+            LandEvent(
+                id="land-001",
+                title="Highway convoy restriction advisory",
+                category="Logistics",
+                latitude=34.04,
+                longitude=-118.27,
+                source_url="https://dot.ca.gov",
+                occurred_at=now - timedelta(hours=3),
+            ),
+            LandEvent(
+                id="land-002",
+                title="Rail corridor maintenance closure",
+                category="Infrastructure",
+                latitude=51.51,
+                longitude=-0.12,
+                source_url="https://tfl.gov.uk",
+                occurred_at=now - timedelta(hours=2),
             ),
         ]
 
@@ -66,24 +113,9 @@ class OSINTService:
 
     def list_geofences(self) -> list[Geofence]:
         return [
-            Geofence(
-                id="geo-jfk",
-                name="JFK Class B Airspace",
-                geometry={"bbox": [-74.3, 40.3, -72.9, 41.0]},
-                alert_on_entry=True,
-            ),
-            Geofence(
-                id="geo-lhr",
-                name="Heathrow CTR",
-                geometry={"bbox": [-0.9, 51.2, 0.2, 51.7]},
-                alert_on_entry=True,
-            ),
-            Geofence(
-                id="geo-sin",
-                name="Singapore FIR Segment",
-                geometry={"bbox": [103.2, 1.0, 104.4, 1.9]},
-                alert_on_entry=True,
-            ),
+            Geofence(id="geo-jfk", name="JFK Class B Airspace", geometry={"bbox": [-74.3, 40.3, -72.9, 41.0]}, alert_on_entry=True),
+            Geofence(id="geo-lhr", name="Heathrow CTR", geometry={"bbox": [-0.9, 51.2, 0.2, 51.7]}, alert_on_entry=True),
+            Geofence(id="geo-sin", name="Singapore FIR Segment", geometry={"bbox": [103.2, 1.0, 104.4, 1.9]}, alert_on_entry=True),
         ]
 
     def list_airspace_boundaries(self) -> list[AirspaceBoundary]:

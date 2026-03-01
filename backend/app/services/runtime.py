@@ -4,6 +4,7 @@ import contextlib
 from app.services.aircraft import AircraftService
 from app.services.alerts import AlertService
 from app.services.osint import OSINTService
+from app.services.risk import RiskService
 
 
 class Runtime:
@@ -11,6 +12,7 @@ class Runtime:
         self.aircraft_service = AircraftService()
         self.alert_service = AlertService()
         self.osint_service = OSINTService()
+        self.risk_service = RiskService()
         self._task: asyncio.Task | None = None
 
     async def start(self) -> None:

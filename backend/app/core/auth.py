@@ -10,7 +10,6 @@ from app.models.schemas import Role, User
 
 security = HTTPBearer(auto_error=False)
 
-# Demo users for bootstrap environments.
 USERS = {
     "admin": {"password": "admin123", "role": Role.admin},
     "analyst": {"password": "analyst123", "role": Role.analyst},
@@ -31,13 +30,7 @@ def authenticate_user(username: str, password: str) -> User | None:
     return User(username=username, role=user["role"])
 
 
-def get_current_user(
-    credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(security)],
-) -> User:
-    if credentials is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing credentials")
-
-    token = credentials.credentials
+def decode_token(token: str) -> User:
     try:
         payload = jwt.decode(token, settings.jwt_secret, algorithms=[settings.jwt_algorithm])
         username = payload.get("sub")
@@ -49,6 +42,14 @@ def get_current_user(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token payload")
 
     return User(username=username, role=Role(role))
+
+
+def get_current_user(
+    credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(security)],
+) -> User:
+    if credentials is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing credentials")
+    return decode_token(credentials.credentials)
 
 
 def require_roles(*allowed_roles: Role):

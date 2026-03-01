@@ -56,6 +56,27 @@ class CameraFeed(BaseModel):
     status: str = "online"
 
 
+class SeaVessel(BaseModel):
+    id: str
+    name: str
+    vessel_type: str
+    latitude: float
+    longitude: float
+    speed_knots: float
+    heading_deg: float
+    source: str
+
+
+class LandEvent(BaseModel):
+    id: str
+    title: str
+    category: str
+    latitude: float
+    longitude: float
+    source_url: str
+    occurred_at: datetime
+
+
 class DefenseEvent(BaseModel):
     id: str
     category: str
@@ -95,6 +116,12 @@ class TrafficDensitySnapshot(BaseModel):
     total_aircraft: int
     hotspots: list[HeatmapBin]
     generated_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class RiskAssessment(BaseModel):
+    overall_score: float
+    level: str
+    rationale: list[str]
 
 
 class TokenRequest(BaseModel):

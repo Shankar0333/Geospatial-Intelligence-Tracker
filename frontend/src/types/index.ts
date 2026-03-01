@@ -48,8 +48,35 @@ export interface DefenseEvent {
   occurred_at: string
 }
 
+export interface SeaVessel {
+  id: string
+  name: string
+  vessel_type: string
+  latitude: number
+  longitude: number
+  speed_knots: number
+  heading_deg: number
+  source: string
+}
+
+export interface LandEvent {
+  id: string
+  title: string
+  category: string
+  latitude: number
+  longitude: number
+  source_url: string
+  occurred_at: string
+}
+
 export interface TrafficDensitySnapshot {
   total_aircraft: number
   hotspots: HeatmapBin[]
   generated_at: string
+}
+
+export interface RiskAssessment {
+  overall_score: number
+  level: 'low' | 'medium' | 'high'
+  rationale: string[]
 }
